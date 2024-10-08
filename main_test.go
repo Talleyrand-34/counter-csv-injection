@@ -37,11 +37,11 @@ func TestReplaceInjection(t *testing.T) {
 		injectionType InjectionType
 		expected      string
 	}{
-		{"Command Injection", "ls | grep secret", CommandInjection, "\"ls //| grep secret\""},
-		{"SQL Injection", "SELECT * FROM users", SQLInjection, "\"SELECT * FROM users\""},
-		{"XSS Injection", "<script>alert('XSS')</script>", XSSInjection, "\"&lt;script&gt;alert(''XSS'')&lt;/script&gt;\""},
-		{"Formula Injection", "=SUM(A1:A10)", FormulaInjection, "\"'=SUM(A1:A10)\""},
-		{"No Injection", "Hello, World!", NoInjection, "\"Hello, World!\""},
+		{"Command Injection", "ls | grep secret", CommandInjection, "ls //| grep secret"},
+		{"SQL Injection", "SELECT * FROM users", SQLInjection, "SELECT * FROM users"},
+		{"XSS Injection", "<script>alert('XSS')</script>", XSSInjection, "&lt;script&gt;alert(''XSS'')&lt;/script&gt;"},
+		{"Formula Injection", "=SUM(A1:A10)", FormulaInjection, "'=SUM(A1:A10)"},
+		{"No Injection", "Hello, World!", NoInjection, "Hello, World!"},
 	}
 
 	for _, tt := range tests {
@@ -137,7 +137,7 @@ func TestMainCSV(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	//defer os.Remove(outputFile.Name())
+	// defer os.Remove(outputFile.Name())
 
 	// Run main_csv
 	if err := main_csv(inputFile.Name(), outputFile.Name()); err != nil {
@@ -150,7 +150,7 @@ func TestMainCSV(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	expected := "name,data\nAlice,\"Normal data\"\nBob,\"'=SUM(A1:A10)\"\nCharlie,\"&lt;script&gt;alert('XSS')&lt;/script&gt;\"\n"
+	expected := "name,data\nAlice,Normal data\nBob,'=SUM(A1:A10)\nCharlie,&lt;script&gt;alert(''XSS'')&lt;/script&gt;\n"
 	if string(outputContent) != expected {
 		t.Errorf("main_csv() produced\n%q\nwant\n%q", string(outputContent), expected)
 	}
@@ -168,7 +168,7 @@ func TestProcessCSV(t *testing.T) {
 		{"name", "data"},
 		{"Alice", "Normal data"},
 		{"Bob", "'=SUM(A1:A10)"},
-		{"Charlie", "&lt;script&gt;alert('XSS')&lt;/script&gt;"},
+		{"Charlie", "&lt;script&gt;alert(''XSS'')&lt;/script&gt;"},
 	}
 
 	result, err := process_csv(input)

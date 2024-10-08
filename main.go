@@ -126,9 +126,9 @@ func replace_injection(s string, injectionType InjectionType) string {
 		s = "'" + s // Prepend with single quote to treat as text
 	}
 	// Only add quotes if they're not already present
-	if !strings.HasPrefix(s, "\"") || !strings.HasSuffix(s, "\"") {
-		s = "\"" + strings.ReplaceAll(s, "\"", "\"\"") + "\""
-	}
+	// if !strings.HasPrefix(s, "\"") || !strings.HasSuffix(s, "\"") {
+	// 	s = "\"" + strings.ReplaceAll(s, "\"", "\"\"") + "\""
+	// }
 	// Escape double quotes and wrap in quotes as a general safety measure
 	// s = strings.ReplaceAll(s, "\"", "\"\"")
 	// return "\"" + s + "\""
